@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coco的仙女来信 ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #FFD6E7;
+    --mint: #C8F0E0;
+    --cream: #FFF5CC;
+    --lavender: #E8D5FF;
+    --gold: #FFD700;
+    --soft-pink: #FF9EC4;
+    --soft-purple: #C49BE8;
+    --text-main: #6B4C7A;
+    --text-sub: #9B7AAB;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: 'Ma Shan Zheng', 'ZCOOL XiaoWei', cursive;
+    background: linear-gradient(135deg, var(--pink) 0%, var(--lavender) 25%, var(--mint) 50%, var(--cream) 75%, var(--pink) 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 12s ease infinite;
+    cursor: default;
+  }
+
+  @keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* ===================== SPARKLE OVERLAY ===================== */
+  .sparkle-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ===================== OPENING SCREEN ===================== */
+  #opening {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ffe8f4 0%, #f0e4ff 50%, #e0f7ee 100%);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+  }
+
+  #opening.fade-out {
+    opacity: 0;
+    transform: scale(1.05);
+    pointer-events: none;
+  }
+
+  .envelope-wrap {
+    position: relative;
+    margin-bottom: 40px;
+    animation: floatEnvelope 3s ease-in-out infinite;
+  }
+
+  @keyframes floatEnvelope {
+    0%, 100% { transform: translateY(0px) rotate(-2deg); }
+    50%       { transform: translateY(-18px) rotate(2deg); }
+  }
+
+  .envelope {
+    width: 160px;
+    height: 110px;
+    background: linear-gradient(135deg, #fff0f8, #f8f0ff);
+    border-radius: 12px;
+    box-shadow: 0 8px 40px rgba(200, 120, 200, 0.25), 0 0 60px rgba(255, 200, 240, 0.4);
+    position: relative;
+    overflow: visible;
+    border: 1.5px solid rgba(255, 182, 230, 0.6);
+  }
+
+  .envelope::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 55px;
+    background: linear-gradient(180deg, #ffd6f0, #f5d0ff);
+    clip-path: polygon(0 0, 50% 70%, 100% 0);
+    border-radius: 12px 12px 0 0;
+  }
+
+  .envelope::after {
+    content: '💌';
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+    filter: drop-shadow(0 0 8px rgba(255, 150, 200, 0.8));
+  }
+
+  .envelope-glow {
+    position: absolute;
+    inset: -20px;
+    border-radius: 30px;
+    background: radial-gradient(ellipse, rgba(255, 180, 230, 0.35) 0%, transparent 70%);
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50%       { opacity: 1; transform: scale(1.1); }
+  }
+
+  .opening-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(22px, 5vw, 32px);
+    color: var(--text-main);
+    text-align: center;
+    margin-bottom: 12px;
+    text-shadow: 0 0 20px rgba(180, 100, 200, 0.3);
+  }
+
+  .opening-sub {
+    font-size: 13px;
+    color: var(--text-sub);
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+  }
+
+  .open-btn {
+    padding: 14px 44px;
+    background: linear-gradient(135deg, #ffb3d9, #d4a8ff, #a8e6cf);
+    border: none;
+    border-radius: 50px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 18px;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 6px 30px rgba(200, 130, 220, 0.45), 0 0 0 0 rgba(255, 180, 230, 0.5);
+    animation: btnPulse 2s ease-in-out infinite;
+    letter-spacing: 1px;
+    transition: transform 0.2s;
+  }
+
+  .open-btn:hover { transform: scale(1.06); }
+
+  @keyframes btnPulse {
+    0%, 100% { box-shadow: 0 6px 30px rgba(200, 130, 220, 0.45), 0 0 0 0 rgba(255, 180, 230, 0.5); }
+    50%       { box-shadow: 0 6px 40px rgba(200, 130, 220, 0.6), 0 0 0 14px rgba(255, 180, 230, 0); }
+  }
+
+  .opening-stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .os { position: absolute; font-size: 16px; animation: twinkleStar 3s ease-in-out infinite; opacity: 0; }
+  .os:nth-child(1)  { top: 10%; left: 8%;  animation-delay: 0s; }
+  .os:nth-child(2)  { top: 20%; left: 85%; animation-delay: 0.5s; }
+  .os:nth-child(3)  { top: 70%; left: 5%;  animation-delay: 1s; }
+  .os:nth-child(4)  { top: 80%; left: 90%; animation-delay: 1.5s; }
+  .os:nth-child(5)  { top: 45%; left: 92%; animation-delay: 0.8s; }
+  .os:nth-child(6)  { top: 5%;  left: 50%; animation-delay: 2s; }
+  .os:nth-child(7)  { top: 88%; left: 45%; animation-delay: 0.3s; }
+  .os:nth-child(8)  { top: 55%; left: 2%;  animation-delay: 1.8s; }
+
+  @keyframes twinkleStar {
+    0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+    50%       { opacity: 1; transform: scale(1.2) rotate(20deg); }
+  }
+
+  /* ===================== MAIN PAGE ===================== */
+  #main-page {
+    display: none;
+    min-height: 100vh;
+    padding: 60px 20px 80px;
+    position: relative;
+    z-index: 2;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  #main-page.visible {
+    display: flex;
+  }
+
+  /* ===================== LETTER CARD ===================== */
+  .letter-card {
+    position: relative;
+    max-width: 640px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(20px);
+    border-radius: 28px;
+    padding: clamp(36px, 6vw, 60px) clamp(32px, 6vw, 56px);
+    border: 1.5px solid rgba(255, 220, 240, 0.8);
+    box-shadow:
+      0 20px 80px rgba(200, 140, 220, 0.18),
+      0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+      0 0 80px rgba(255, 200, 240, 0.15);
+    animation: breathe 5s ease-in-out infinite;
+    overflow: hidden;
+  }
+
+  .letter-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(255, 214, 231, 0.35) 0%, transparent 45%),
+      radial-gradient(circle at 85% 85%, rgba(232, 213, 255, 0.3) 0%, transparent 45%),
+      radial-gradient(circle at 50% 50%, rgba(200, 240, 224, 0.2) 0%, transparent 60%);
+    border-radius: 28px;
+    pointer-events: none;
+  }
+
+  /* Paper lines */
+  .paper-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 28px;
+    overflow: hidden;
+  }
+
+  .paper-lines::after {
+    content: '';
+    position: absolute;
+    top: 120px; left: 40px; right: 40px; bottom: 60px;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 34px,
+      rgba(200, 180, 230, 0.1) 34px,
+      rgba(200, 180, 230, 0.1) 35px
+    );
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-8px); }
+  }
+
+  .letter-deco-top {
+    text-align: center;
+    margin-bottom: 28px;
+    font-size: 22px;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 0.3s;
+    letter-spacing: 6px;
+    filter: drop-shadow(0 0 6px rgba(255, 180, 200, 0.7));
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  .letter-greeting {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: clamp(20px, 4.5vw, 26px);
+    color: var(--text-main);
+    margin-bottom: 28px;
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===================== GREETING SHIMMER SPECIAL ===================== */
+  .letter-greeting-hero {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: clamp(26px, 6vw, 36px);
+    font-weight: 400;
+    background: linear-gradient(90deg, #C49BE8, #FF9EC4, #FFD700, #FF9EC4, #C49BE8, #7EC8A0, #C49BE8);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmerText 4s linear infinite;
+    text-shadow: none;
+    filter: none;
+    margin-bottom: 28px;
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+    display: block;
+    text-align: left;
+  }
+
+  /* Glow layer behind hero greeting */
+  .letter-greeting-hero::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: inherit;
+    background: linear-gradient(90deg, #C49BE8, #FF9EC4, #FFD700, #FF9EC4, #C49BE8);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmerText 4s linear infinite;
+    filter: blur(6px);
+    opacity: 0.55;
+    z-index: -1;
+  }
+
+  @keyframes shimmerText {
+    0%   { background-position: 0% center; }
+    100% { background-position: 300% center; }
+  }
+
+  /* Floating star ornaments around hero text */
+  .hero-stars {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .hero-star {
+    position: absolute;
+    font-size: 13px;
+    animation: heroStarFloat var(--d) ease-in-out infinite;
+    animation-delay: var(--dl);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @keyframes heroStarFloat {
+    0%,100% { opacity:0; transform: translateY(0) scale(0.5) rotate(0deg); }
+    30%,70% { opacity:1; transform: translateY(-12px) scale(1.1) rotate(20deg); }
+  }
+
+  .letter-body {
+    position: relative;
+    z-index: 1;
+  }
+
+  .letter-line {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: clamp(16px, 3.5vw, 20px);
+    color: #7A5A8A;
+    line-height: 1.95;
+    margin-bottom: 4px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .letter-line.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .letter-line .char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(8px) scale(0.8);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .letter-line .char.shown {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .letter-sign {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: clamp(18px, 4vw, 24px);
+    color: var(--soft-purple);
+    text-align: right;
+    margin-top: 32px;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    position: relative;
+    z-index: 1;
+  }
+
+  .letter-sign.revealed {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .letter-deco-bottom {
+    text-align: center;
+    margin-top: 28px;
+    font-size: 18px;
+    opacity: 0;
+    position: relative;
+    z-index: 1;
+    letter-spacing: 4px;
+  }
+
+  /* ===================== BUTTERFLIES ===================== */
+  .butterfly {
+    position: fixed;
+    pointer-events: none;
+    z-index: 50;
+    font-size: 28px;
+    filter: drop-shadow(0 0 8px rgba(255, 200, 240, 0.9));
+    will-change: transform;
+  }
+
+  @keyframes wingFlap {
+    0%, 100% { transform: scaleX(1); }
+    50%       { transform: scaleX(0.3); }
+  }
+
+  .butterfly span {
+    display: inline-block;
+    animation: wingFlap 0.35s ease-in-out infinite;
+  }
+
+  /* ===================== MAGIC PARTICLES ===================== */
+  .magic-particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 3;
+    border-radius: 50%;
+    background: radial-gradient(circle, #FFD700, rgba(255,215,0,0));
+    animation: particleFade var(--dur) ease forwards;
+  }
+
+  @keyframes particleFade {
+    0%   { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-50px) scale(0); }
+  }
+
+  /* ===================== MUSIC BUTTON ===================== */
+  .music-btn {
+    position: fixed;
+    top: 22px;
+    right: 22px;
+    z-index: 200;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(255, 200, 230, 0.7);
+    box-shadow: 0 4px 20px rgba(200, 140, 220, 0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    transition: transform 0.3s;
+  }
+
+  .music-btn:hover { transform: scale(1.1); }
+
+  .music-btn.playing .music-icon {
+    animation: spinStar 3s linear infinite;
+  }
+
+  @keyframes spinStar {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  .music-note-burst {
+    position: absolute;
+    font-size: 11px;
+    animation: noteBurst 1.5s ease forwards;
+    pointer-events: none;
+  }
+
+  @keyframes noteBurst {
+    0%   { opacity: 1; transform: translate(0, 0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.3); }
+  }
+
+  /* ===================== GLITTER TRAIL ===================== */
+  .glitter-dot {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    animation: glitterFade 1s ease forwards;
+  }
+
+  @keyframes glitterFade {
+    0%   { opacity: 0.9; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0) translateY(-12px); }
+  }
+
+  /* ===================== RESPONSIVE ===================== */
+  @media (max-width: 480px) {
+    .letter-card { padding: 30px 24px; }
+    .music-btn { top: 14px; right: 14px; width: 42px; height: 42px; }
+  }
+
+  /* ===================== SCROLL HINT ===================== */
+  .scroll-fade {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .scroll-fade.in { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ===== CANVAS FOR SPARKLES ===== -->
+<canvas class="sparkle-canvas" id="sparkleCanvas"></canvas>
+
+<!-- ===== OPENING SCREEN ===== -->
+<div id="opening">
+  <div class="opening-stars">
+    <span class="os">✨</span><span class="os">🌸</span>
+    <span class="os">⭐</span><span class="os">💫</span>
+    <span class="os">🌟</span><span class="os">✨</span>
+    <span class="os">🌸</span><span class="os">💫</span>
+  </div>
+  <div class="envelope-wrap">
+    <div class="envelope-glow"></div>
+    <div class="envelope"></div>
+  </div>
+  <div class="opening-title">你有一封来自 Coco 的信 💌</div>
+  <div class="opening-sub">轻轻点击，开启专属惊喜</div>
+  <button class="open-btn" id="openBtn">✨ 点击开启惊喜 ✨</button>
+</div>
+
+<!-- ===== MUSIC BUTTON ===== -->
+<button class="music-btn" id="musicBtn" style="display:none;">
+  <span class="music-icon">🌟</span>
+</button>
+
+<!-- ===== MAIN PAGE ===== -->
+<div id="main-page">
+  <div class="letter-card" id="letterCard">
+    <div class="paper-lines"></div>
+    <div class="letter-deco-top">🌸 ✨ 🦋 ✨ 🌸</div>
+
+    <div class="hero-stars" id="heroStarsWrap">
+      <span class="letter-greeting-hero" id="heroGreeting" data-text="我亲爱的 coforyou 爱将们，"></span>
+    </div>
+
+    <div class="letter-body">
+      <div class="letter-line" data-delay="400">
+        这几天我出差不在，
+      </div>
+      <div class="letter-line" data-delay="900">
+        但你们一直都是我最放心的那一群人哦 🤍
+      </div>
+      <br>
+      <div class="letter-line" data-delay="1500">
+        这段时间大家都很努力，
+      </div>
+      <div class="letter-line" data-delay="2100">
+        谢谢你们一起把很多事情都轻轻松松撑起来！
+      </div>
+      <div class="letter-line" data-delay="2800">
+        给你们准备了一点甜的，
+      </div>
+      <div class="letter-line" data-delay="3400">
+        希望今天的工作可以轻松一点 &amp; 开心一点 🍓
+      </div>
+      <br>
+      <div class="letter-line" data-delay="4200">
+        继续保持状态，
+      </div>
+      <div class="letter-line" data-delay="4800">
+        我们会一起越做越好 ✨
+      </div>
+    </div>
+
+    <div class="letter-sign" id="letterSign">— Coco 💕</div>
+
+    <div class="letter-deco-bottom scroll-fade" id="letterDeco">
+      🌷 &nbsp; 🌟 &nbsp; 🦋 &nbsp; 🌟 &nbsp; 🌷
+    </div>
+  </div>
+</div>
+
+<!-- ===== BACKGROUND MUSIC =====
+  替换说明 (How to replace music):
+  1. 将你的音频文件（.mp3 或 .ogg）上传到你的服务器或 CDN
+  2. 将下方 <audio> 标签的 src 属性替换为实际的音频文件 URL
+  3. 推荐音乐风格：迪士尼仙女风格背景音乐，如 "Tinker Bell Theme"、"Fairy Godmother"
+  4. 示例：src="https://your-cdn.com/fairy-music.mp3"
+-->
+<audio id="bgMusic" loop>
+  <!-- ⬇️ 请将下方 src 替换为实际的仙女音乐 URL ⬇️ -->
+  <source src="YOUR_FAIRY_MUSIC_URL_HERE.mp3" type="audio/mpeg">
+  <!-- 备用格式 fallback: -->
+  <!-- <source src="YOUR_FAIRY_MUSIC_URL_HERE.ogg" type="audio/ogg"> -->
+</audio>
+
+<script>
+// ===================== CONFIG =====================
+const BUTTERFLY_COUNT = 5;
+const PARTICLE_COLORS = ['#FFD700','#FFB6C1','#DDA0DD','#98FB98','#87CEEB','#FFA07A'];
+const GLITTER_COLORS = ['#FFD700','#FF9EC4','#C49BE8','#7EC8A0'];
+
+// ===================== OPENING =====================
+document.getElementById('openBtn').addEventListener('click', () => {
+  const opening = document.getElementById('opening');
+  const mainPage = document.getElementById('main-page');
+  const musicBtn = document.getElementById('musicBtn');
+
+  // Try to play music
+  const music = document.getElementById('bgMusic');
+  music.volume = 0.45;
+  music.play().catch(() => {}); // graceful fail if no src
+
+  // Mark button playing
+  musicBtn.classList.add('playing');
+
+  // Show opening hide
+  opening.classList.add('fade-out');
+
+  setTimeout(() => {
+    opening.style.display = 'none';
+    mainPage.classList.add('visible');
+    musicBtn.style.display = 'flex';
+
+    // Start all animations
+    initSparkles();
+    initButterflies();
+    startLetterReveal();
+    initMouseGlitter();
+  }, 1200);
+});
+
+// ===================== MUSIC BUTTON =====================
+document.getElementById('musicBtn').addEventListener('click', function() {
+  const music = document.getElementById('bgMusic');
+  this.classList.toggle('playing');
+  if (music.paused) {
+    music.play().catch(() => {});
+    spawnMusicNotes(this);
+  } else {
+    music.pause();
+  }
+});
+
+function spawnMusicNotes(btn) {
+  const notes = ['♪','♫','🎵','✨'];
+  const angles = [[-40,-60],[-20,-75],[10,-65],[35,-55]];
+  angles.forEach(([tx, ty], i) => {
+    const el = document.createElement('span');
+    el.className = 'music-note-burst';
+    el.textContent = notes[i % notes.length];
+    el.style.cssText = `left:50%;top:50%;--tx:${tx}px;--ty:${ty}px;`;
+    btn.appendChild(el);
+    setTimeout(() => el.remove(), 1500);
+  });
+}
+
+// ===================== SPARKLES CANVAS =====================
+function initSparkles() {
+  const canvas = document.getElementById('sparkleCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  class Sparkle {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.r = Math.random() * 2.5 + 0.5;
+      this.life = 0;
+      this.maxLife = Math.random() * 120 + 60;
+      this.speed = (Math.random() - 0.5) * 0.4;
+      this.dy = -Math.random() * 0.5 - 0.1;
+      this.color = GLITTER_COLORS[Math.floor(Math.random() * GLITTER_COLORS.length)];
+    }
+    update() {
+      this.x += this.speed;
+      this.y += this.dy;
+      this.life++;
+      if (this.life > this.maxLife) this.reset();
+    }
+    draw() {
+      const alpha = Math.sin((this.life / this.maxLife) * Math.PI) * 0.8;
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = this.color;
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // Star sparkles
+  for (let i = 0; i < 80; i++) {
+    const s = new Sparkle();
+    s.life = Math.floor(Math.random() * s.maxLife); // stagger start
+    particles.push(s);
+  }
+
+  function drawStar(x, y, r, alpha, color) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = color;
+    ctx.translate(x, y);
+    ctx.beginPath();
+    for (let i = 0; i < 5; i++) {
+      const a = (i * 4 * Math.PI / 5) - Math.PI / 2;
+      const b = (i * 4 * Math.PI / 5 + 2 * Math.PI / 5) - Math.PI / 2;
+      ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+      ctx.lineTo(Math.cos(b) * r * 0.4, Math.sin(b) * r * 0.4);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  const starParticles = Array.from({length: 30}, () => ({
+    x: Math.random() * 1, y: Math.random() * 1,
+    r: Math.random() * 4 + 2,
+    life: Math.random() * 200,
+    maxLife: Math.random() * 160 + 80,
+    color: PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)]
+  }));
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    starParticles.forEach(s => {
+      s.life++;
+      if (s.life > s.maxLife) {
+        s.x = Math.random(); s.y = Math.random();
+        s.life = 0; s.maxLife = Math.random() * 160 + 80;
+        s.r = Math.random() * 4 + 2;
+      }
+      const a = Math.sin((s.life / s.maxLife) * Math.PI) * 0.6;
+      drawStar(s.x * W, s.y * H, s.r, a, s.color);
+    });
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+// ===================== BUTTERFLIES =====================
+function initButterflies() {
+  const emojis = ['🦋','🦋','🌸','✨','🦋'];
+  const paths = [
+    { startX: -80, startY: 0.2, endX: 1.1, endY: 0.15, dur: 12000, delay: 500 },
+    { startX: 1.1,  startY: 0.6, endX: -80, endY: 0.45, dur: 14000, delay: 2000 },
+    { startX: -80, startY: 0.8, endX: 1.1, endY: 0.7,  dur: 10000, delay: 4000 },
+    { startX: 0.3,  startY: -80, endX: 0.6, endY: 1.1,  dur: 11000, delay: 1000 },
+    { startX: 1.1,  startY: 0.3, endX: -80, endY: 0.8,  dur: 16000, delay: 3500 },
+  ];
+
+  paths.forEach((p, i) => {
+    spawnButterfly(emojis[i], p);
+  });
+}
+
+function spawnButterfly(emoji, path) {
+  const el = document.createElement('div');
+  el.className = 'butterfly';
+  el.innerHTML = `<span>${emoji}</span>`;
+  el.style.opacity = 0;
+  document.body.appendChild(el);
+
+  function fly() {
+    const W = window.innerWidth, H = window.innerHeight;
+    const sx = typeof path.startX === 'number' && path.startX < 0 ? path.startX : path.startX * W;
+    const sy = typeof path.startY === 'number' && path.startY < 0 ? path.startY : path.startY * H;
+    const ex = path.endX > 1 ? W * 1.1 + 80 : (path.endX < 0 ? -80 : path.endX * W);
+    const ey = path.endY > 1 ? H * 1.1 + 80 : (path.endY < 0 ? -80 : path.endY * H);
+
+    el.style.left = sx + 'px';
+    el.style.top  = sy + 'px';
+    el.style.opacity = 0;
+
+    // Wobble path via keyframe
+    const id = 'bf_' + Math.random().toString(36).slice(2);
+    const midX = (sx + ex) / 2 + (Math.random() - 0.5) * 200;
+    const midY = Math.min(sy, ey) - 80 - Math.random() * 120;
+    const style = document.createElement('style');
+    style.id = id;
+    style.textContent = `
+      @keyframes ${id} {
+        0%   { left:${sx}px; top:${sy}px; opacity:0; transform:scale(0.7); }
+        8%   { opacity:0.85; transform:scale(1); }
+        50%  { left:${midX}px; top:${midY}px; opacity:0.85; }
+        92%  { opacity:0.7; }
+        100% { left:${ex}px; top:${ey}px; opacity:0; transform:scale(0.7); }
+      }
+    `;
+    document.head.appendChild(style);
+    el.style.animation = `${id} ${path.dur}ms cubic-bezier(.45,0,.55,1) forwards`;
+
+    setTimeout(() => {
+      el.style.animation = 'none';
+      document.head.removeChild(style);
+      // Re-randomize path slightly
+      path.startX = path.endX; path.startY = path.endY;
+      path.endX = (Math.random() > 0.5 ? -80 : window.innerWidth * 1.1);
+      path.endY = Math.random() * 0.9;
+      fly();
+    }, path.dur + 200);
+  }
+
+  setTimeout(fly, path.delay || 0);
+}
+
+// ===================== LETTER REVEAL =====================
+function startLetterReveal() {
+  // === HERO GREETING — special shimmer reveal ===
+  const hero = document.getElementById('heroGreeting');
+  const heroText = '我亲爱的 coforyou 爱将们，';
+  hero.style.opacity = 0;
+  hero.style.transform = 'translateY(20px) scale(0.95)';
+  hero.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+
+  setTimeout(() => {
+    hero.textContent = heroText;
+    hero.style.opacity = 1;
+    hero.style.transform = 'translateY(0) scale(1)';
+
+    // Spawn floating star ornaments around hero
+    const wrap = document.getElementById('heroStarsWrap');
+    const starEmojis = ['✨','💫','🌟','⭐','✨','💛','🌸'];
+    for (let i = 0; i < 7; i++) {
+      const s = document.createElement('span');
+      s.className = 'hero-star';
+      s.textContent = starEmojis[i % starEmojis.length];
+      s.style.cssText = `
+        left:${Math.random() * 100}%;
+        top:${-10 + Math.random() * 110}%;
+        --d:${2 + Math.random() * 2}s;
+        --dl:${Math.random() * 2}s;
+      `;
+      wrap.appendChild(s);
+    }
+
+    // Big particle burst centered on hero text
+    setTimeout(() => {
+      const rect = hero.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+          const angle = Math.random() * Math.PI * 2;
+          const dist = Math.random() * 160;
+          spawnMagicParticle(cx + Math.cos(angle) * dist, cy + Math.sin(angle) * dist);
+        }, i * 30);
+      }
+    }, 200);
+  }, 200);
+
+  // === BODY LINES ===
+  const lines = document.querySelectorAll('.letter-line');
+  lines.forEach(line => {
+    const delay = parseInt(line.dataset.delay || 0);
+    revealLine(line, delay);
+  });
+
+  // Sign reveal
+  const sign = document.getElementById('letterSign');
+  setTimeout(() => sign.classList.add('revealed'), 5600);
+
+  // Deco reveal
+  const deco = document.getElementById('letterDeco');
+  setTimeout(() => {
+    deco.classList.add('scroll-fade');
+    requestAnimationFrame(() => deco.classList.add('in'));
+    deco.style.opacity = 1;
+    burstParticles(window.innerWidth / 2, window.innerHeight * 0.7);
+  }, 6200);
+}
+
+function revealLine(line, delay) {
+  // Reset and rebuild with char spans
+  const text = line.textContent.trim();
+  line.innerHTML = '';
+  [...text].forEach(c => {
+    const span = document.createElement('span');
+    span.className = 'char';
+    span.textContent = c === ' ' ? '\u00A0' : c;
+    line.appendChild(span);
+  });
+
+  line.style.opacity = 1;
+  line.style.transform = 'translateY(0)';
+
+  const chars = line.querySelectorAll('.char');
+  chars.forEach((c, i) => {
+    setTimeout(() => {
+      c.classList.add('shown');
+      // Spawn a tiny magic particle near this char
+      const rect = c.getBoundingClientRect();
+      if (rect.width > 0) spawnMagicParticle(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    }, delay + i * 55);
+  });
+}
+
+function spawnMagicParticle(x, y) {
+  if (Math.random() > 0.5) return; // don't spawn every char
+  const el = document.createElement('div');
+  el.className = 'magic-particle';
+  const size = Math.random() * 6 + 3;
+  const dur = Math.random() * 0.8 + 0.6;
+  const color = PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)];
+  el.style.cssText = `
+    left:${x + (Math.random()-0.5)*20}px;
+    top:${y + (Math.random()-0.5)*10}px;
+    width:${size}px; height:${size}px;
+    background: radial-gradient(circle, ${color}, rgba(255,215,0,0));
+    --dur:${dur}s;
+    box-shadow: 0 0 ${size*2}px ${color};
+  `;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), dur * 1000 + 100);
+}
+
+function burstParticles(cx, cy) {
+  for (let i = 0; i < 30; i++) {
+    setTimeout(() => {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = Math.random() * 120;
+      spawnMagicParticle(cx + Math.cos(angle) * dist, cy + Math.sin(angle) * dist);
+    }, i * 40);
+  }
+}
+
+// ===================== MOUSE GLITTER =====================
+function initMouseGlitter() {
+  let lastX = -100, lastY = -100;
+  document.addEventListener('mousemove', (e) => {
+    const dx = e.clientX - lastX, dy = e.clientY - lastY;
+    if (dx*dx + dy*dy < 400) return;
+    lastX = e.clientX; lastY = e.clientY;
+    spawnGlitterDot(e.clientX, e.clientY);
+  });
+
+  document.addEventListener('touchmove', (e) => {
+    const t = e.touches[0];
+    spawnGlitterDot(t.clientX, t.clientY);
+  }, { passive: true });
+}
+
+function spawnGlitterDot(x, y) {
+  for (let i = 0; i < 3; i++) {
+    const el = document.createElement('div');
+    el.className = 'glitter-dot';
+    const size = Math.random() * 6 + 2;
+    const color = GLITTER_COLORS[Math.floor(Math.random() * GLITTER_COLORS.length)];
+    el.style.cssText = `
+      left:${x + (Math.random()-0.5)*16}px;
+      top:${y + (Math.random()-0.5)*16}px;
+      width:${size}px; height:${size}px;
+      background:${color};
+      box-shadow: 0 0 ${size*3}px ${color};
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1000);
+  }
+}
+</script>
+</body>
+</html>
